@@ -45,7 +45,6 @@ Vagrant.configure("2") do |config|
                 nodeconfig.vm.network :private_network, ip: node[:ip], virtualbox__intnet: domain
                 nodeconfig.vm.provider :virtualbox do |vb|
                     vb.name = node[:hostname]+"."+domain
-                    #if the node is the master node then special settings for it, TRY TO FIX THIS!!!
                     vb.memory = 2000
                     vb.cpus = 2
                     #Virtual box vbmanage custom directives, prior to boot of each box
@@ -69,7 +68,6 @@ Vagrant.configure("2") do |config|
                 nodeconfig.vm.network :private_network, ip: node[:ip], virtualbox__intnet: domain
                 nodeconfig.vm.provider :virtualbox do |vb|
                     vb.name = node[:hostname]+"."+domain
-                    #if the node is the master node then special settings for it, TRY TO FIX THIS!!!
                     vb.memory = 1000
                     vb.cpus = 1
                     #Virtual box vbmanage custom directives, prior to boot of each box
