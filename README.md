@@ -16,6 +16,10 @@ This is a automated deploy of a 3 node cluster running ubuntu/xenial minimal dis
         { :hostname => 'node2', :ip => '10.0.0.12', :id => '12' },
     ]
 
+# Change the local vagrant ssh key path: 
+
+    config.ssh.private_key_path = "/Users/dabenson/.vagrant.d/insecure_private_key"
+
 
 # Edit the VM's specs:
 
