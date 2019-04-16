@@ -3,19 +3,26 @@
 - lineinfile: dest=/etc/sysctl.conf line='net.bridge.bridge-nf-call-ip6tables = 1' state=present
 - lineinfile: dest=/etc/sysctl.conf line='net.bridge.bridge-nf-call-iptables = 1' state=present
 #Running kubeadm init 
-- name: initialize kube
-  shell: "kubeadm reset --force && sysctl -p && kubeadm init --apiserver-advertise-address=10.0.0.10 --pod-network-cidr=10.244.0.0/16"
-  args:
-    #Creates a file if it doesnt exist
-    #creates: /etc/kubeadm-join.sh
-    #Registers output of command on variable kubeadm_out
-  register: kubeadm_out
-#Appends the contenty of the variable to the file, will run if the file has content with the join command
+- name: Initializing KUBE
+  shell: >
+      kubeadm reset --force && 
+      sysctl -p && 
+      kubeadm init --apiserver-advertise-address=10.0.0.10 --pod-network-cidr=10.244.0.0/16
+
+- name: Generate join command
+  command: kubeadm token create --print-join-command
+  register: join_command
+
+- debug:
+    msg: "{{ join_command.stdout_lines[0] }}"
+
+
+#Appends the content of the variable to the file, will run if the file has content with the join command
 - lineinfile:
     path: /etc/kubeadm-join.sh
-    line: "{{kubeadm_out.stdout_lines[-1]}}"
+    line: "{{join_command.stdout_lines[0]}}"
     create: yes
-  when: kubeadm_out.stdout.find("kubeadm join") != -1
+  when: join_command.stdout.find("kubeadm join") != -1
 #Starts to enable the kubelet service
 - service: name=kubelet state=started enabled=yes
 #Checks that the /etc/kubectl directory exists

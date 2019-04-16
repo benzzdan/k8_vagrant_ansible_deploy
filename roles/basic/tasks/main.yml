@@ -1,19 +1,30 @@
 ---
-- name: Oracle proxy config and apt-get update
-  copy: src=../files/oracle_proxy.conf dest=/etc/apt/apt.conf owner=root group=root mode=0644
-  #Allowing the user to skip proxy setup or not depending on location of deployment.
-  tags: 
-   - proxy
+# - name: Oracle proxy config and apt-get update
+#   copy: src=../files/oracle_proxy.conf dest=/etc/apt/apt.conf owner=root group=root mode=0644
+#   #Allowing the user to skip proxy setup or not depending on location of deployment.
+#   tags: 
+#    - proxy
 
-- shell: "apt-get update && apt-get install -y apt-transport-https curl"
+# - name: Running apt update on all hosts 
+#   apt: 
+#     update_cache: yes
+
+- name: Installing packages curl and https-transport
+  apt: name={{item}} state=installed
+  with_items:
+    - apt-transport-https
+    - curl
+ 
 
 - name: Adding repo
   apt_repository:
     repo: 'deb https://apt.kubernetes.io/ kubernetes-xenial main'
     state: present
 
-- name: "Upading apt-get"
-  shell: "apt-get update"
+- name: Upading apt-get
+  apt: 
+    upgrade: yes
+    # update_cache: yes
   
 - name: install docker and kubernetes
   apt: name={{ item }} state=present allow_unauthenticated=yes

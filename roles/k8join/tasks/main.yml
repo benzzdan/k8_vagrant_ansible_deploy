@@ -21,7 +21,7 @@
 ##Join nodes
 - name: join nodes
   shell: >
-     systemctl stop kubelet; kubeadm reset --force;
+     sudo systemctl stop kubelet; kubeadm reset --force;
      echo "{{ hostvars['kmaster'].kubeadm_join }}" > /etc/kubeadm-join.sh ;
      bash /etc/kubeadm-join.sh
   args:

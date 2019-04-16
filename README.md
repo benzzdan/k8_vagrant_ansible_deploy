@@ -18,7 +18,7 @@ This is a automated deploy of a 3 node cluster running ubuntu/xenial minimal dis
 
 # Change the local vagrant ssh key path: 
 
-    config.ssh.private_key_path = "/Users/dabenson/.vagrant.d/insecure_private_key"
+config.ssh.private_key_path = "/Users/dabenson/.vagrant.d/insecure_private_key"
 
 
 # Edit the VM's specs:
@@ -32,7 +32,11 @@ Edit the following on the Vagrant file, according to standards, I am leaving 2 c
 
 vagrant up 
 
+# Run ssh config so we can access the nodes without a password
+
+vagrant ssh-config >~/.ssh/config
+
 
 # Ansible post provisioning
 
-Comming soon....
+ansible-playbook -u vagrant playbook.yml
